@@ -1,6 +1,6 @@
 #include "items.h"
 
-Melee_Weapons::Melee_Weapons(float weight, float price, int quantity, std::string nameobject, float damage, float attack_speed, float acuity)
+Melee_Weapons::Melee_Weapons(float weight, float price, int quantity, const std::string & nameobject, float damage, float attack_speed, float acuity)
 {
 	this->weight = weight;
 	this->price = price;
@@ -11,12 +11,7 @@ Melee_Weapons::Melee_Weapons(float weight, float price, int quantity, std::strin
 	std::string classname = "Melee_Weapons";
 }
 
-float Melee_Weapons::get_acuity()
-{
-	return acuity;
-}
-
-Notes::Notes(float weight, float price, int quantity, std::string nameobject, std::string pathtotext)
+Notes::Notes(float weight, float price, int quantity, const std::string & nameobject, std::string pathtotext)
 {
 	this->weight = weight;
 	this->price = price;
@@ -26,13 +21,7 @@ Notes::Notes(float weight, float price, int quantity, std::string nameobject, st
 
 }
 
-std::string Notes::get_pathtotext()
-{
-	return pathtotext;
-}
-
-
-Heal::Heal(float weight, float price, int quantity, std::string nameobject, float change_hp)
+Heal::Heal(float weight, float price, int quantity, const std::string & nameobject, float change_hp)
 {
 	this->weight = 0;
 	this->price = price;
@@ -41,10 +30,6 @@ Heal::Heal(float weight, float price, int quantity, std::string nameobject, floa
 	std::string classname = "Heal";
 }
 
-float Heal::get_change_hp()
-{
-	return change_hp;
-}
 
 Money::Money(float weight, float price, int quantity)
 {
@@ -55,7 +40,7 @@ Money::Money(float weight, float price, int quantity)
 	nameobject = "money";
 }
 
-Armor::Armor(float weight, float price, int quantity, std::string nameobject, float armor, float dexterity)
+Armor::Armor(float weight, float price, int quantity, const std::string &nameobject, float armor, float dexterity)
 {
 	this->weight = weight;
 	this->price = price;
@@ -65,52 +50,78 @@ Armor::Armor(float weight, float price, int quantity, std::string nameobject, fl
 	std::string classname = "Armor";
 }
 
-float Armor::get_armor()
+Item* ItemRegistry::loadFormsStreamItem(std::istream& is)
 {
-	return armor;
+	float weight,
+		price;
+	int quantity;
+	std::string classname,
+		nameobject;
+	is >> classname;
+	is >> weight;
+	is >> price;
+	is >> quantity;
+	
+	if (classname=="Melee_Weapons"){
+		std::getline(is, nameobject,'\n');
+		std::getline(is, nameobject,'\n');
+		float acuity, 
+			damage,
+			attack_speed;
+		is >> damage;
+		is >> attack_speed;
+		is >> acuity;
+		Melee_Weapons melee_weapons (weight, price, quantity, nameobject,damage, attack_speed, acuity );
+		return (&melee_weapons);
+	}
+
+	else if (classname == "Notes") {
+		std::getline(is, nameobject,'\n');
+		std::getline(is, nameobject,'\n');
+		std::string pathtotext;
+		is >> pathtotext;
+		Notes notes(weight, price, quantity, nameobject, pathtotext);
+		return (&notes);
+	}
+
+
+	else if (classname == "Heal") {
+		std::getline(is, nameobject,'\n');
+		std::getline(is, nameobject,'\n');
+		float change_hp;
+		is >> change_hp;
+		Heal heal(weight, price, quantity, nameobject, change_hp);
+		return (&heal);
+	}
+
+	else if (classname == "Money") { 
+		Money money (weight, price, quantity);
+		return (&money);
+	}
+
+	else if (classname == "Armor") { 
+		std::getline(is, nameobject,'\n');
+		std::getline(is, nameobject, '\n');
+		float armor,
+			dexterity;
+		is >> armor;
+		is >> dexterity;
+		Armor armorclass (weight, price, quantity ,nameobject, armor, dexterity);
+		return (&armorclass);
+	}
 }
 
-float Armor::get_dexterity()
+std::vector<Item*>* ItemRegistry::loadinventory(std::istream& is)
 {
-	return dexterity;
+	std::vector<Item*> inventory;
+	int count;
+	is >> count;
+	ItemRegistry reg;
+	for (int i = 0; i < count; i++) {
+
+		inventory.push_back(reg.loadFormsStreamItem(is));
+
+	}
+	return ( & inventory);
 }
 
-float Item::get_weight()
-{
-	return weight;
-}
-
-float Item::get_price()
-{
-	return price;
-}
-
-int Item::get_quantity()
-{
-	return quantity;
-}
-
-std::string Item::get_classname()
-{
-	return classname;
-}
-
-std::string Item::get_nameobject()
-{
-	return nameobject;
-}
-
-void Item::set_quantity(int quantity)
-{
-	this->quantity += quantity;
-}
-
-float Weapon::get_damage()
-{
-	return damage;
-}
-
-float Weapon::get_attack_speed()
-{
-	return attack_speed;
-}

@@ -1,3 +1,4 @@
+#pragma once
 #include "game.h"
 #include <iostream>
 #include "algoritm.h"
@@ -5,7 +6,7 @@
 
 class Player {
 	Game game;
-protected:
+protected: 
 	float hp = 100,
 		armor = 50,
 		dexterity = 50,
@@ -20,17 +21,17 @@ protected:
 
 	void change_hp(float hp);
 
-	void change_armor(float armor);
+	void change_armor(float armor){ this->armor += armor; }
 
-	void change_dexterity(float dexterity);
+	void change_dexterity(float dexterity){ this->dexterity += dexterity; }
 
-	void change_luky(float luky);
+	void change_luky(float luky) { this->luky += luky; }
 
-	void change_skilllvl_sword(float sword);
+	void change_skilllvl_sword(float sword){ skilllvl_sword += sword; }
 
-	void change_skilllvl_bow(float bow);
+	void change_skilllvl_bow(float bow) { skilllvl_bow += bow; }
 
-	void change_skilllvl_firearm(float firearm);
+	void change_skilllvl_firearm(float firearm){ skilllvl_firearm += firearm; }
 
 	bool takeitem(Item *take);
 

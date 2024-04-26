@@ -10,6 +10,7 @@ void draw(std::string filename)
         }
     }
 }
+
 void typewriter(std::string str)
 {
     for (int i = 0; i <= str.length() - 1; i++)
@@ -17,4 +18,5 @@ void typewriter(std::string str)
         std::cout << str[i];
         Sleep(50);
     }
+    std::cout << std::endl;
 }

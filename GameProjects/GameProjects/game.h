@@ -2,6 +2,9 @@
 #include "visual.h"
 #include <random>
 #include <algorithm> 
+#include <fstream>
+#include "room.h"
+//#include "player.h"
 
 class Game {
 public:
@@ -21,6 +24,8 @@ public:
 	bool mainmenu();
 	
 	bool gameovermenu();
+
+	int dialog(const std::string &message, const std::string &promt, const std::vector <std::string> &choices);
 };
 
 

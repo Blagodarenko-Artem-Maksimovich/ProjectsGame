@@ -10,36 +10,6 @@ void Player::change_hp(float hp)
 	}
 }
 
-void Player::change_armor(float armor)
-{
-	this->armor += armor;
-}
-
-void Player::change_dexterity(float dexterity)
-{
-	this->dexterity+=dexterity;
-}
-
-void Player::change_luky(float luky)
-{
-	this->luky += luky;
-}
-
-void Player::change_skilllvl_sword(float sword)
-{
-	skilllvl_sword += sword;
-}
-
-void Player::change_skilllvl_bow(float bow)
-{
-	skilllvl_bow += bow;
-}
-
-void Player::change_skilllvl_firearm(float firearm)
-{
-	skilllvl_firearm += firearm;
-}
-
 bool Player::takeitem(Item *take)
 {
 	if ((*take).get_weight() * (*take).get_quantity() + weight_curent <= lifting_capacity) {
@@ -91,3 +61,4 @@ int Player::find_inventory(Item * find)
 	}
 	return -1;
 }
+

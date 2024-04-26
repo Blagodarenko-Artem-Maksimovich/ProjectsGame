@@ -1,6 +1,6 @@
 #include "frend.h"
 
-Frend::Frend(std::string name, std::string classname, std::vector<Item*> inventory)
+Frend::Frend(const std::string & name, const std::string & classname, std::vector<Item*> inventory)
 {
 	this->name = name;
 	this->classname = classname;

@@ -20,15 +20,33 @@ int Game::random()
 
 void Game::main_loop()
 {
-    draw("../Pictures/GameName.txt");
-    Sleep(2500);
-    if (mainmenu() == false) { return;}
-    typewriter("какой-то текст предыстории");
-    if ( gameovermenu() == false) { return; }
-    while (true) {
+    RoomRegistry reg;
+    int currentRoomId=0;
+    std::ifstream input("../Elemets/world.txt");
+    if (input.is_open()) {
 
+        currentRoomId=reg.loadFormsStream(input);
+
+        draw("../Pictures/GameName.txt");
+        Sleep(2500);
+        if (mainmenu() == false) { return; }
+        typewriter("какой-то текст предыстории");
+        //if (gameovermenu() == false) { return; }
+        while (true) {
+            int currentRoomIdtmp;      
+            const RoomDef* currentRoom = reg.getRoomDef(currentRoomId);
+            std::vector <std::string> choices;
+            std::transform(
+                currentRoom->conectedRooms.begin(),
+                currentRoom->conectedRooms.end(),
+                std::back_inserter(choices),
+                [&reg](int roomId) { return reg.getRoomDef(roomId)->name; });
+            int choice = dialog(currentRoom->description, "Куда идём?>", choices); 
+            currentRoomIdtmp = currentRoom->conectedRooms[choice];
+            if (!reg.getRoomDef(currentRoomIdtmp)->locked) { currentRoomId = currentRoomIdtmp; }
+            else {std::cout << "Закрыто..." << std::endl;}
+        }
     }
-
 }
 
 bool Game::mainmenu()
@@ -59,5 +77,27 @@ bool Game::gameovermenu()
     draw("../Pictures/GameOverMenu.txt");
     Sleep(2500);
     return (mainmenu());
+}
+
+int Game::dialog(const std::string& message, const std::string& promt, const std::vector<std::string>& choices)
+{
+    typewriter(message);
+
+    typewriter(promt);
+
+    for (int i = 0; i < choices.size(); i++) {
+        std::cout << i + 1 << ". " << choices[i] << std::endl;
+    }
+
+    typewriter(promt);
+    std::string choice;
+    std::vector <std::string> words;
+    do {
+        std::cin>>choice;
+        words = sepstring(choice);
+    } while (!(isint(words[0]) or (std::stoi(words[0]) < 1) or (std::stoi(words[0]) > choices.size())));
+
+    return (std::stoi(words[0])-1);
+
 }
 
